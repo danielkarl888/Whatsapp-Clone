@@ -19,7 +19,17 @@ namespace Services
 
         public void Create(string id, string name, string server);
 
-        public bool CheckByID(string id);
+        public bool CheckContactByID(string id);
+
+        public bool CheckMessageByID(string idContact, int idMessage);
+
+        public List<Message> GetMessages(string id);
+        public int GetNextIdMessage(string id);
+
+        public Message GetMessageById(string idContact, int idMessage);
+
+
+
 
 
     }

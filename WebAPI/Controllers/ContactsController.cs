@@ -27,7 +27,7 @@ namespace WebAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult Details(string id)
         {
-            if (_service.CheckByID(id)){
+            if (_service.CheckContactByID(id)){
                 return Ok(_service.Get(id));
             } else
                return NotFound();
@@ -36,7 +36,7 @@ namespace WebAPI.Controllers
         [HttpGet("{id}/messages")]
         public IActionResult DetailsMessages(string id)
         {
-            if (_service.CheckByID(id))
+            if (_service.CheckContactByID(id))
             {
                 return Ok(_service.Get(id).Messages);
             }
@@ -59,8 +59,8 @@ namespace WebAPI.Controllers
         [HttpPost("{id}/messages")]
         public IActionResult CreateMessage([Bind("Content")] Message message, string id)
         {
-            message.Id = 150;
-            _service.Get(id).Messages.Add(message);
+            message.Id = _service.GetNextIdMessage(id);
+            _service.GetMessages(id).Add(message);
             return Created(string.Format("/api/Contacts/{0}/messages", message.Id), message);
         }
 
@@ -68,7 +68,7 @@ namespace WebAPI.Controllers
 
         public IActionResult Put([Bind("Name,Server")] Contact contact, string id)
         {
-            if (_service.CheckByID(id))
+            if (_service.CheckContactByID(id))
             {
                 _service.Get(id).Name = contact.Name;
                 _service.Get(id).Server = contact.Server;
@@ -78,15 +78,54 @@ namespace WebAPI.Controllers
                 return NotFound();
         }
         [HttpDelete("{id}")]
-        public IActionResult Delete2(string id)
+        public IActionResult DeleteContact(string id)
         {
-            if (_service.CheckByID(id))
+            if (_service.CheckContactByID(id))
             {
                 _service.Delete(id);
                 return NoContent();
             }
             else
                 return NotFound();
+        }
+        [HttpGet("{id}/messages/{id2}")]
+        public IActionResult getMessage(string id, int id2)
+        {
+            if (_service.CheckContactByID(id) && _service.CheckMessageByID(id, id2))
+            {
+                return Ok(_service.GetMessageById(id, id2));
+
+            } else
+            {
+                return NotFound();
+            }
+        }
+        [HttpPut("{id}/messages/{id2}")]
+        public IActionResult putMessage([Bind("content")] Message message,string id, int id2)
+        {
+            if (_service.CheckContactByID(id) && _service.CheckMessageByID(id, id2))
+            {
+                _service.GetMessageById(id, id2).Content=message.Content;
+                _service.GetMessageById(id, id2).Created = DateTime.Now;
+                return NoContent();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+        [HttpDelete("{id}/messages/{id2}")]
+        public IActionResult deleteMessage(string id, int id2)
+        {
+            if (_service.CheckContactByID(id) && _service.CheckMessageByID(id, id2))
+            {
+                _service.GetMessages(id).Remove(_service.GetMessageById(id, id2));
+                return NoContent();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 

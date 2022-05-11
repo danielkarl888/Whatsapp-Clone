@@ -37,6 +37,15 @@ namespace Services
         {
             return contacts.Find(x => x.Id == id);
         }
+        public List<Message> GetMessages(string id)
+        {
+            return contacts.Find(x => x.Id == id).Messages;
+        }
+        public int GetNextIdMessage(string id)
+        {
+            int max = GetMessages(id).Max(t=>t.Id);
+            return max + 1;
+        }
 
         public List<Contact> GetAllContacts()
         {
@@ -47,7 +56,7 @@ namespace Services
             Contact c = new Contact { Id = id, Name = name, Server = server, Last = null, LastDate = null };
             contacts.Add(c);
         }
-        public bool CheckByID(string id)
+        public bool CheckContactByID(string id)
         {
              if (contacts.Find(x=>x.Id==id) !=null)
             {
@@ -55,6 +64,26 @@ namespace Services
             } else
                 return false;
         }
+        public bool CheckMessageByID(string idContact, int idMessage)
+        {
+             if (GetMessages(idContact).Find(x=> x.Id == idMessage) != null)
+            {
+                return true;
+            }
+             return false;
+
+        }
+
+        public Message GetMessageById(string idContact, int idMessage)
+        {
+            if (CheckMessageByID(idContact, idMessage))
+            {
+                return GetMessages(idContact).Find(x => x.Id == idMessage);
+            }
+            return null;
+        }
+
+
 
 
     }
