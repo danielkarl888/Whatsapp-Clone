@@ -11,8 +11,13 @@ namespace Services
     {
         private static List<Contact> contacts = new List<Contact>  
         {
-            new Contact{ Id="bob", Name="Bobby", Last="hii", Server="localhost:3000", LastDate=DateTime.Now },
-            new Contact{ Id="alice", Name="Alicia", Last="biibii", Server="localhost:2500", LastDate=DateTime.UtcNow }
+            new Contact{ Id="bob", Name="Bobby", Last="hii", Server="localhost:3000", LastDate=DateTime.Now,
+                
+                Messages=new List<Message>{ new Message {Id=121, Content="hii", Created=DateTime.Now, Sent=true },
+                                            new Message {Id=123, Content="biibii", Created=DateTime.UtcNow, Sent=false },                                                                            } },
+                new Contact{ Id="alice", Name="Alicia", Last="biibii", Server="localhost:2500", LastDate=DateTime.UtcNow,
+                                     Messages=new List<Message>{ new Message {Id=141, Content="razzz", Created=DateTime.Now, Sent=true },
+                                                                 new Message {Id=143, Content="david", Created=DateTime.UtcNow, Sent=false } }                                                                                             }
         };
         public void Delete(string id)
         {

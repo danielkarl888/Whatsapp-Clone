@@ -6,7 +6,7 @@ namespace WebAPI.Controllers
 {
     //the contoller is a service (api)
     [ApiController]
-    [Route("/api/[controller]")]
+    [Route("/api/[controller]/")]
 
     public class ContactsController : Controller
     {
@@ -32,6 +32,17 @@ namespace WebAPI.Controllers
             } else
                return NotFound();
         }
+        // GET: Articles/Details/5
+        [HttpGet("{id}/messages")]
+        public IActionResult DetailsMessages(string id)
+        {
+            if (_service.CheckByID(id))
+            {
+                return Ok(_service.Get(id).Messages);
+            }
+            else
+                return NotFound();
+        }
 
 
         // POST: Articles/Create
@@ -39,13 +50,46 @@ namespace WebAPI.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
 
-        public IActionResult Create([Bind("Id,Name,Server")] Contact contact)
-        {
+        public IActionResult CreateContact([Bind("Id,Name,Server")] Contact contact)
+        {   
             _service.Create(contact.Id, contact.Name, contact.Server);
             return Created(string.Format("/api/Contacts/{0}", contact.Id), contact);
-
         }
 
+        [HttpPost("{id}/messages")]
+        public IActionResult CreateMessage([Bind("Content")] Message message, string id)
+        {
+            message.Id = 150;
+            _service.Get(id).Messages.Add(message);
+            return Created(string.Format("/api/Contacts/{0}/messages", message.Id), message);
+        }
+
+        [HttpPut("{id}")]
+
+        public IActionResult Put([Bind("Name,Server")] Contact contact, string id)
+        {
+            if (_service.CheckByID(id))
+            {
+                _service.Get(id).Name = contact.Name;
+                _service.Get(id).Server = contact.Server;
+                return NoContent();
+            }
+            else
+                return NotFound();
+        }
+        [HttpDelete("{id}")]
+        public IActionResult Delete2(string id)
+        {
+            if (_service.CheckByID(id))
+            {
+                _service.Delete(id);
+                return NoContent();
+            }
+            else
+                return NotFound();
+        }
     }
-}
+
+    }
+
 
