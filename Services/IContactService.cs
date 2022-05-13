@@ -9,24 +9,24 @@ namespace Services
 {
     public interface IContactService
     {
-        public List<Contact> GetAllContacts();
+        public List<Contact> GetAllContacts(string username);
 
-        public Contact Get(string id);
+        public Contact Get(string id, string username);
 
-        public void Delete(string id);
+        public void Delete(string id, string username);
 
-        public void Edit(string id, string name, string server, string last);
+        public void Edit(string id, string name, string server, string last, string username);
 
-        public void Create(string id, string name, string server);
+        public void Create(string id, string name, string server, string username);
 
-        public bool CheckContactByID(string id);
+        public bool CheckContactByID(string id, string username);
 
-        public bool CheckMessageByID(string idContact, int idMessage);
+        public bool CheckMessageByID(string idContact, int idMessage, string username);
 
-        public List<Message> GetMessages(string id);
-        public int GetNextIdMessage(string id);
+        public List<Message> GetMessages(string id, string username);
+        public int GetNextIdMessage(string id, string username);
 
-        public Message GetMessageById(string idContact, int idMessage);
+        public Message GetMessageById(string idContact, int idMessage, string username);
 
 
 

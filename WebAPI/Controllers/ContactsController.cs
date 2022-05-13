@@ -17,18 +17,25 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Contact> Index()
+        public IActionResult Index()
         {
+            string user = HttpContext.Session.GetString("userName");
 
-            return _service.GetAllContacts();
+            if (HttpContext.Session.GetString("userName") == null)
+            {
+                return BadRequest();
+            }
+            return Ok(_service.GetAllContacts(user));
         }
 
         // GET: Articles/Details/5
         [HttpGet("{id}")]
         public IActionResult Details(string id)
         {
-            if (_service.CheckContactByID(id)){
-                return Ok(_service.Get(id));
+            string user = HttpContext.Session.GetString("userName");
+
+            if (_service.CheckContactByID(id, user)){
+                return Ok(_service.Get(id, user));
             } else
                return NotFound();
         }
@@ -36,9 +43,10 @@ namespace WebAPI.Controllers
         [HttpGet("{id}/messages")]
         public IActionResult DetailsMessages(string id)
         {
-            if (_service.CheckContactByID(id))
+            string user = HttpContext.Session.GetString("userName");
+            if (_service.CheckContactByID(id, user))
             {
-                return Ok(_service.Get(id).Messages);
+                return Ok(_service.Get(id, user).Messages);
             }
             else
                 return NotFound();
@@ -52,15 +60,17 @@ namespace WebAPI.Controllers
 
         public IActionResult CreateContact([Bind("Id,Name,Server")] Contact contact)
         {   
-            _service.Create(contact.Id, contact.Name, contact.Server);
+            _service.Create(contact.Id, contact.Name, contact.Server, HttpContext.Session.GetString("userName"));
             return Created(string.Format("/api/Contacts/{0}", contact.Id), contact);
         }
 
         [HttpPost("{id}/messages")]
         public IActionResult CreateMessage([Bind("Content")] Message message, string id)
         {
-            message.Id = _service.GetNextIdMessage(id);
-            _service.GetMessages(id).Add(message);
+            string user = HttpContext.Session.GetString("userName");
+
+            message.Id = _service.GetNextIdMessage(id, user);
+            _service.GetMessages(id, user).Add(message);
             return Created(string.Format("/api/Contacts/{0}/messages", message.Id), message);
         }
 
@@ -68,10 +78,11 @@ namespace WebAPI.Controllers
 
         public IActionResult Put([Bind("Name,Server")] Contact contact, string id)
         {
-            if (_service.CheckContactByID(id))
+            string user = HttpContext.Session.GetString("userName");
+            if (_service.CheckContactByID(id, user))
             {
-                _service.Get(id).Name = contact.Name;
-                _service.Get(id).Server = contact.Server;
+                _service.Get(id, user).Name = contact.Name;
+                _service.Get(id, user).Server = contact.Server;
                 return NoContent();
             }
             else
@@ -80,9 +91,11 @@ namespace WebAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteContact(string id)
         {
-            if (_service.CheckContactByID(id))
+            string user = HttpContext.Session.GetString("userName");
+
+            if (_service.CheckContactByID(id, user))
             {
-                _service.Delete(id);
+                _service.Delete(id, user);
                 return NoContent();
             }
             else
@@ -91,9 +104,11 @@ namespace WebAPI.Controllers
         [HttpGet("{id}/messages/{id2}")]
         public IActionResult getMessage(string id, int id2)
         {
-            if (_service.CheckContactByID(id) && _service.CheckMessageByID(id, id2))
+            string user = HttpContext.Session.GetString("userName");
+
+            if (_service.CheckContactByID(id, user) && _service.CheckMessageByID(id, id2, user))
             {
-                return Ok(_service.GetMessageById(id, id2));
+                return Ok(_service.GetMessageById(id, id2, user));
 
             } else
             {
@@ -103,10 +118,12 @@ namespace WebAPI.Controllers
         [HttpPut("{id}/messages/{id2}")]
         public IActionResult putMessage([Bind("content")] Message message,string id, int id2)
         {
-            if (_service.CheckContactByID(id) && _service.CheckMessageByID(id, id2))
+            string user = HttpContext.Session.GetString("userName");
+
+            if (_service.CheckContactByID(id, user) && _service.CheckMessageByID(id, id2, user))
             {
-                _service.GetMessageById(id, id2).Content=message.Content;
-                _service.GetMessageById(id, id2).Created = DateTime.Now;
+                _service.GetMessageById(id, id2, user).Content=message.Content;
+                _service.GetMessageById(id, id2, user).Created = DateTime.Now;
                 return NoContent();
             }
             else
@@ -117,9 +134,11 @@ namespace WebAPI.Controllers
         [HttpDelete("{id}/messages/{id2}")]
         public IActionResult deleteMessage(string id, int id2)
         {
-            if (_service.CheckContactByID(id) && _service.CheckMessageByID(id, id2))
+            string user = HttpContext.Session.GetString("userName");
+
+            if (_service.CheckContactByID(id, user) && _service.CheckMessageByID(id, id2, user))
             {
-                _service.GetMessages(id).Remove(_service.GetMessageById(id, id2));
+                _service.GetMessages(id, user).Remove(_service.GetMessageById(id, id2, user));
                 return NoContent();
             }
             else

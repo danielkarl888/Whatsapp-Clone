@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,34 @@ namespace Services
 {
     public class ContactService : IContactService
     {
+        Dictionary<string, List<Contact>> contacts = new Dictionary<string, List<Contact>>
+        {
+            {"david", new List<Contact>{
+                new Contact{ Id="bob", Name="Bobby", Last="hii", Server="localhost:3000", LastDate=DateTime.Now,
+
+                Messages=new List<Message>{ new Message {Id=121, Content="hii", Created=DateTime.Now, Sent=true },
+                                            new Message {Id=123, Content="biibii", Created=DateTime.UtcNow, Sent=false },                                                                            } },
+                new Contact{ Id="alice", Name="Alicia", Last="biibii", Server="localhost:2500", LastDate=DateTime.UtcNow,
+                             Messages=new List<Message>{ new Message {Id=141, Content="razzz", Created=DateTime.Now, Sent=true },
+                                                         new Message {Id=143, Content="david", Created=DateTime.UtcNow, Sent=false } }                                                                                             }
+        }},
+        {"raz", new List<Contact>{
+                new Contact{ Id="bob_raz", Name="Bobby", Last="hii", Server="localhost:3000", LastDate=DateTime.Now,
+
+                Messages=new List<Message>{ new Message {Id=121, Content="hii", Created=DateTime.Now, Sent=true },
+                                            new Message {Id=123, Content="biibii", Created=DateTime.UtcNow, Sent=false },                                                                            } },
+                new Contact{ Id="alice_raz", Name="Alicia_raz", Last="biibii_raz", Server="localhost:2500", LastDate=DateTime.UtcNow,
+                             Messages=new List<Message>{ new Message {Id=141, Content="razzz_raz", Created=DateTime.Now, Sent=true },
+                                                         new Message {Id=143, Content="david_raz", Created=DateTime.UtcNow, Sent=false } }                                                                                             }
+        }}
+
+
+
+
+
+
+        };
+        /*
         private static List<Contact> contacts = new List<Contact>  
         {
             new Contact{ Id="bob", Name="Bobby", Last="hii", Server="localhost:3000", LastDate=DateTime.Now,
@@ -19,72 +48,70 @@ namespace Services
                                      Messages=new List<Message>{ new Message {Id=141, Content="razzz", Created=DateTime.Now, Sent=true },
                                                                  new Message {Id=143, Content="david", Created=DateTime.UtcNow, Sent=false } }                                                                                             }
         };
-        public void Delete(string id)
+        */
+        public void Delete(string id, string username)
         {
-            contacts.Remove(Get(id));
+            contacts[username].Remove(Get(id, username));
         }
 
-        public void Edit(string id, string name, string server, string last)
+        public void Edit(string id, string name, string server, string last, string username)
         {
-            Contact contact = Get(id);
+            Contact contact = Get(id, username);
             contact.Name = name;
             contact.Server = server;
             contact.Last = last;
 
         }
 
-        public Contact Get(string id)
+        public Contact Get(string id, string username)
         {
-            return contacts.Find(x => x.Id == id);
+            return contacts[username].Find(x => x.Id == id);
         }
-        public List<Message> GetMessages(string id)
+        public List<Message> GetMessages(string id, string username)
         {
-            return contacts.Find(x => x.Id == id).Messages;
+            return contacts[username].Find(x => x.Id == id).Messages;
         }
-        public int GetNextIdMessage(string id)
+        public int GetNextIdMessage(string id, string username)
         {
-            int max = GetMessages(id).Max(t=>t.Id);
+            int max = GetMessages(id, username).Max(t => t.Id);
             return max + 1;
         }
 
-        public List<Contact> GetAllContacts()
+        public List<Contact> GetAllContacts(string username)
         {
-            return contacts;
+            return contacts[username];
         }
-        public void Create(string id, string name, string server)
+        public void Create(string id, string name, string server, string username)
         {
             Contact c = new Contact { Id = id, Name = name, Server = server, Last = null, LastDate = null };
-            contacts.Add(c);
+            contacts[username].Add(c);
         }
-        public bool CheckContactByID(string id)
+        public bool CheckContactByID(string id, string username)
         {
-             if (contacts.Find(x=>x.Id==id) !=null)
-            {
-                return true;
-            } else
-                return false;
-        }
-        public bool CheckMessageByID(string idContact, int idMessage)
-        {
-             if (GetMessages(idContact).Find(x=> x.Id == idMessage) != null)
+            if (contacts[username].Find(x => x.Id == id) != null)
             {
                 return true;
             }
-             return false;
+            else
+                return false;
+        }
+        public bool CheckMessageByID(string idContact, int idMessage, string username)
+        {
+            if (GetMessages(idContact, username).Find(x => x.Id == idMessage) != null)
+            {
+                return true;
+            }
+            return false;
 
         }
 
-        public Message GetMessageById(string idContact, int idMessage)
+        public Message GetMessageById(string idContact, int idMessage, string username)
         {
-            if (CheckMessageByID(idContact, idMessage))
+            if (CheckMessageByID(idContact, idMessage, username))
             {
-                return GetMessages(idContact).Find(x => x.Id == idMessage);
+                return GetMessages(idContact, username).Find(x => x.Id == idMessage);
             }
             return null;
         }
-
-
-
-
     }
 }

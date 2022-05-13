@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WAppBIU_Server.Models;
+using Domain;
 
 namespace WAppBIU_Server.Data
 {
@@ -15,5 +16,7 @@ namespace WAppBIU_Server.Data
         }
 
         public DbSet<WAppBIU_Server.Models.Rank> Rank { get; set; }
+
+        public DbSet<Domain.User> User { get; set; }
     }
 }
