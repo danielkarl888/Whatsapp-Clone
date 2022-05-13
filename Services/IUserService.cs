@@ -16,8 +16,6 @@ namespace Services
         public List<User> GetAllUsers();
         public User GetUser(string username);
         public bool checkValidation(string username, string password);
-        public void activeUserChange(string username);
-        public User GetActiveUser();
 
 
 

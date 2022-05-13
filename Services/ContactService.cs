@@ -10,7 +10,7 @@ namespace Services
 {
     public class ContactService : IContactService
     {
-        Dictionary<string, List<Contact>> contacts = new Dictionary<string, List<Contact>>
+        public static Dictionary<string, List<Contact>> contacts = new Dictionary<string, List<Contact>>
         {
             {"david", new List<Contact>{
                 new Contact{ Id="bob", Name="Bobby", Last="hii", Server="localhost:3000", LastDate=DateTime.Now,
@@ -37,18 +37,6 @@ namespace Services
 
 
         };
-        /*
-        private static List<Contact> contacts = new List<Contact>  
-        {
-            new Contact{ Id="bob", Name="Bobby", Last="hii", Server="localhost:3000", LastDate=DateTime.Now,
-                
-                Messages=new List<Message>{ new Message {Id=121, Content="hii", Created=DateTime.Now, Sent=true },
-                                            new Message {Id=123, Content="biibii", Created=DateTime.UtcNow, Sent=false },                                                                            } },
-                new Contact{ Id="alice", Name="Alicia", Last="biibii", Server="localhost:2500", LastDate=DateTime.UtcNow,
-                                     Messages=new List<Message>{ new Message {Id=141, Content="razzz", Created=DateTime.Now, Sent=true },
-                                                                 new Message {Id=143, Content="david", Created=DateTime.UtcNow, Sent=false } }                                                                                             }
-        };
-        */
         public void Delete(string id, string username)
         {
             contacts[username].Remove(Get(id, username));
@@ -73,8 +61,12 @@ namespace Services
         }
         public int GetNextIdMessage(string id, string username)
         {
-            int max = GetMessages(id, username).Max(t => t.Id);
-            return max + 1;
+            if(GetMessages(id, username).Count != 0)
+            {
+                int max = GetMessages(id, username).Max(t => t.Id);
+                return max + 1;
+            }
+            return 1;
         }
 
         public List<Contact> GetAllContacts(string username)
@@ -83,7 +75,7 @@ namespace Services
         }
         public void Create(string id, string name, string server, string username)
         {
-            Contact c = new Contact { Id = id, Name = name, Server = server, Last = null, LastDate = null };
+            Contact c = new Contact { Id = id, Name = name, Server = server, Last = null, LastDate = null, Messages = new List<Message>() };
             contacts[username].Add(c);
         }
         public bool CheckContactByID(string id, string username)

@@ -70,6 +70,7 @@ namespace WebAPI.Controllers
             string user = HttpContext.Session.GetString("userName");
 
             message.Id = _service.GetNextIdMessage(id, user);
+            message.Created = DateTime.Now;
             _service.GetMessages(id, user).Add(message);
             return Created(string.Format("/api/Contacts/{0}/messages", message.Id), message);
         }

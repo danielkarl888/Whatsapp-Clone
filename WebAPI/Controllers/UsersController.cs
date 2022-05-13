@@ -24,7 +24,6 @@ namespace WebAPI.Controllers
             return _service.GetAllUsers();
         }
 
-        // GET: Articles/Details/5
         [HttpGet("{username}")]
         public IActionResult Details(string username)
         {
@@ -65,7 +64,6 @@ namespace WebAPI.Controllers
             else
             {
                 HttpContext.Session.SetString("userName", user.UserName);
-                _service.activeUserChange(user.UserName);
                 return NoContent();
             }
         }
