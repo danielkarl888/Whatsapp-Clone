@@ -16,6 +16,8 @@ namespace WebAPI.Controllers
             _service = service;
         }
 
+        // Get all contacts of the current user
+        
         [HttpGet]
         public IActionResult Index()
         {
@@ -23,27 +25,36 @@ namespace WebAPI.Controllers
 
             if (HttpContext.Session.GetString("userName") == null)
             {
-                return BadRequest();
+                return BadRequest("User MUST Login!");
             }
             return Ok(_service.GetAllContacts(user));
         }
 
-        // GET: Articles/Details/5
+        // Get a certain contact according to his id 
+
         [HttpGet("{id}")]
         public IActionResult Details(string id)
         {
             string user = HttpContext.Session.GetString("userName");
-
+            if (user == null)
+            {
+                return BadRequest("User MUST Login!");
+            }
             if (_service.CheckContactByID(id, user)){
                 return Ok(_service.Get(id, user));
             } else
                return NotFound();
         }
-        // GET: Articles/Details/5
+
+        // Get all messages from a certain contact (according to the id contact)
         [HttpGet("{id}/messages")]
         public IActionResult DetailsMessages(string id)
         {
             string user = HttpContext.Session.GetString("userName");
+            if (user == null)
+            {
+                return BadRequest("User MUST Login!");
+            }
             if (_service.CheckContactByID(id, user))
             {
                 return Ok(_service.Get(id, user).Messages);
@@ -53,33 +64,51 @@ namespace WebAPI.Controllers
         }
 
 
-        // POST: Articles/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // add a new contact to the current user
         [HttpPost]
 
         public IActionResult CreateContact([Bind("Id,Name,Server")] Contact contact)
-        {   
+        {
+            if (HttpContext.Session.GetString("userName") == null)
+            {
+                return BadRequest("User MUST Login!");
+            }
             _service.Create(contact.Id, contact.Name, contact.Server, HttpContext.Session.GetString("userName"));
             return Created(string.Format("/api/Contacts/{0}", contact.Id), contact);
         }
 
+        // add a new message to a certain contact
         [HttpPost("{id}/messages")]
         public IActionResult CreateMessage([Bind("Content")] Message message, string id)
         {
             string user = HttpContext.Session.GetString("userName");
-
+            if (user == null)
+            {
+                return BadRequest("User MUST Login!");
+            }
+            if (!_service.CheckContactByID(id, user))
+            {
+                return NotFound();
+            }
+            
             message.Id = _service.GetNextIdMessage(id, user);
             message.Created = DateTime.Now;
             _service.GetMessages(id, user).Add(message);
+            _service.Get(id, user).Last = message.Content;
+            _service.Get(id, user).LastDate = DateTime.Now;
+
             return Created(string.Format("/api/Contacts/{0}/messages", message.Id), message);
         }
 
         [HttpPut("{id}")]
-
+        //change a cerain contact info (only name and server)
         public IActionResult Put([Bind("Name,Server")] Contact contact, string id)
         {
             string user = HttpContext.Session.GetString("userName");
+            if (user == null)
+            {
+                return BadRequest("User MUST Login!");
+            }
             if (_service.CheckContactByID(id, user))
             {
                 _service.Get(id, user).Name = contact.Name;
@@ -89,11 +118,15 @@ namespace WebAPI.Controllers
             else
                 return NotFound();
         }
+        // delete a certain contact 
         [HttpDelete("{id}")]
         public IActionResult DeleteContact(string id)
         {
             string user = HttpContext.Session.GetString("userName");
-
+            if (user == null)
+            {
+                return BadRequest("User MUST Login!");
+            }
             if (_service.CheckContactByID(id, user))
             {
                 _service.Delete(id, user);
@@ -102,11 +135,15 @@ namespace WebAPI.Controllers
             else
                 return NotFound();
         }
+        // get a certain message(id2) from certain contact(id) 
         [HttpGet("{id}/messages/{id2}")]
         public IActionResult getMessage(string id, int id2)
         {
             string user = HttpContext.Session.GetString("userName");
-
+            if (user == null)
+            {
+                return BadRequest("User MUST Login!");
+            }
             if (_service.CheckContactByID(id, user) && _service.CheckMessageByID(id, id2, user))
             {
                 return Ok(_service.GetMessageById(id, id2, user));
@@ -116,11 +153,16 @@ namespace WebAPI.Controllers
                 return NotFound();
             }
         }
+        // change a certain message(id2) from certain contact(id) 
+
         [HttpPut("{id}/messages/{id2}")]
         public IActionResult putMessage([Bind("content")] Message message,string id, int id2)
         {
             string user = HttpContext.Session.GetString("userName");
-
+            if (user == null)
+            {
+                return BadRequest("User MUST Login!");
+            }
             if (_service.CheckContactByID(id, user) && _service.CheckMessageByID(id, id2, user))
             {
                 _service.GetMessageById(id, id2, user).Content=message.Content;
@@ -132,11 +174,16 @@ namespace WebAPI.Controllers
                 return NotFound();
             }
         }
+        // delete a certain message(id2) from certain contact(id) 
+
         [HttpDelete("{id}/messages/{id2}")]
         public IActionResult deleteMessage(string id, int id2)
         {
             string user = HttpContext.Session.GetString("userName");
-
+            if (user == null)
+            {
+                return BadRequest("User MUST Login!");
+            }
             if (_service.CheckContactByID(id, user) && _service.CheckMessageByID(id, id2, user))
             {
                 _service.GetMessages(id, user).Remove(_service.GetMessageById(id, id2, user));
@@ -147,6 +194,15 @@ namespace WebAPI.Controllers
                 return NotFound();
             }
         }
+        /*
+        [HttpPost("/transfer/")]
+        public IActionResult Invite( string from, string to, string server)
+        {
+            HttpClient http = new HttpClient();
+            http.BaseAddress = new Uri(server);
+            http.PostAsJsonAsync(from, to).Wait();
+        }
+        */
     }
 
     }

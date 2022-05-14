@@ -13,22 +13,21 @@ namespace Services
         public static Dictionary<string, List<Contact>> contacts = new Dictionary<string, List<Contact>>
         {
             {"david", new List<Contact>{
-                new Contact{ Id="bob", Name="Bobby", Last="hii", Server="localhost:3000", LastDate=DateTime.Now,
+                new Contact{ Id="bob", Name="Bobby", Last="biibii", Server="localhost:3000", LastDate=DateTime.Now,
 
-                Messages=new List<Message>{ new Message {Id=121, Content="hii", Created=DateTime.Now, Sent=true },
-                                            new Message {Id=123, Content="biibii", Created=DateTime.UtcNow, Sent=false },                                                                            } },
-                new Contact{ Id="alice", Name="Alicia", Last="biibii", Server="localhost:2500", LastDate=DateTime.UtcNow,
-                             Messages=new List<Message>{ new Message {Id=141, Content="razzz", Created=DateTime.Now, Sent=true },
-                                                         new Message {Id=143, Content="david", Created=DateTime.UtcNow, Sent=false } }                                                                                             }
+                Messages=new List<Message>{ new Message {Id=121, Content="hii", Created=DateTime.UtcNow, Sent=true },
+                                            new Message {Id=123, Content="biibii", Created=DateTime.Now, Sent=false },                                                                            } },
+                new Contact{ Id="alice", Name="Alicia", Last="david", Server="localhost:2500", LastDate=DateTime.Now,
+                             Messages=new List<Message>{ new Message {Id=141, Content="razzz", Created=DateTime.UtcNow, Sent=true },
+                                                         new Message {Id=143, Content="david", Created=DateTime.Now, Sent=false } }                                                                                             }
         }},
         {"raz", new List<Contact>{
-                new Contact{ Id="bob_raz", Name="Bobby", Last="hii", Server="localhost:3000", LastDate=DateTime.Now,
-
-                Messages=new List<Message>{ new Message {Id=121, Content="hii", Created=DateTime.Now, Sent=true },
-                                            new Message {Id=123, Content="biibii", Created=DateTime.UtcNow, Sent=false },                                                                            } },
-                new Contact{ Id="alice_raz", Name="Alicia_raz", Last="biibii_raz", Server="localhost:2500", LastDate=DateTime.UtcNow,
-                             Messages=new List<Message>{ new Message {Id=141, Content="razzz_raz", Created=DateTime.Now, Sent=true },
-                                                         new Message {Id=143, Content="david_raz", Created=DateTime.UtcNow, Sent=false } }                                                                                             }
+                new Contact{    Id="bob_raz", Name="Bobby", Last="biibii", Server="localhost:3001", LastDate=DateTime.Now,
+                                Messages=new List<Message>{ new Message {Id=121, Content="hii", Created=DateTime.UtcNow, Sent=true },
+                                                            new Message {Id=123, Content="biibii", Created=DateTime.Now, Sent=false },                                                                            } },
+                new Contact{    Id="alice_raz", Name="Alicia_raz", Last="david_raz", Server="localhost:2502", LastDate=DateTime.Now,
+                                Messages=new List<Message>{ new Message {Id=141, Content="razzz_raz", Created=DateTime.UtcNow, Sent=true },
+                                                         new Message {Id=143, Content="david_raz", Created=DateTime.Now, Sent=false } }                                                                                             }
         }}
 
 
