@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services;
+using System.Net.Http;
 
 namespace WebAPI.Controllers
 {
@@ -86,6 +87,7 @@ namespace WebAPI.Controllers
             {
                 return BadRequest("User MUST Login!");
             }
+            // check if the id contact exist
             if (!_service.CheckContactByID(id, user))
             {
                 return NotFound();
@@ -93,7 +95,9 @@ namespace WebAPI.Controllers
             
             message.Id = _service.GetNextIdMessage(id, user);
             message.Created = DateTime.Now;
+            message.Sent = true;
             _service.GetMessages(id, user).Add(message);
+            // change the info of the conatct
             _service.Get(id, user).Last = message.Content;
             _service.Get(id, user).LastDate = DateTime.Now;
 
@@ -194,15 +198,32 @@ namespace WebAPI.Controllers
                 return NotFound();
             }
         }
-        /*
-        [HttpPost("/transfer/")]
+        
+        [HttpPost("/api/invitations/")]
         public IActionResult Invite( string from, string to, string server)
         {
-            HttpClient http = new HttpClient();
-            http.BaseAddress = new Uri(server);
-            http.PostAsJsonAsync(from, to).Wait();
+            _service.Create(from, from, server, to);
+            return Created(string.Format("/api/invitations/{0}", from), from);
         }
-        */
+        [HttpPost("/api/transfer/")]
+        public IActionResult Transfer(string from, string to, string content)
+        {
+            if (!_service.CheckContactByID(from, to))
+            {
+                return NotFound();
+            }
+            Message message = new Message();
+            message.Id = _service.GetNextIdMessage(from, to);
+            message.Created = DateTime.Now;
+            message.Sent = false;
+            _service.GetMessages(from, to).Add(message);
+            // change the info of the conatct
+            _service.Get(from, to).Last = message.Content;
+            _service.Get(from, to).LastDate = DateTime.Now;
+
+            return Created(string.Format("/api/transfer/{0}", message.Id), message);
+
+        }
     }
 
     }

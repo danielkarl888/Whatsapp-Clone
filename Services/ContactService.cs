@@ -29,18 +29,11 @@ namespace Services
                                 Messages=new List<Message>{ new Message {Id=141, Content="razzz_raz", Created=DateTime.UtcNow, Sent=true },
                                                          new Message {Id=143, Content="david_raz", Created=DateTime.Now, Sent=false } }                                                                                             }
         }}
-
-
-
-
-
-
         };
         public void Delete(string id, string username)
         {
             contacts[username].Remove(Get(id, username));
         }
-
         public void Edit(string id, string name, string server, string last, string username)
         {
             Contact contact = Get(id, username);
@@ -95,7 +88,6 @@ namespace Services
             return false;
 
         }
-
         public Message GetMessageById(string idContact, int idMessage, string username)
         {
             if (CheckMessageByID(idContact, idMessage, username))

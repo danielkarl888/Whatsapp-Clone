@@ -35,16 +35,13 @@ namespace WebAPI.Controllers
                 return NotFound();
         }
 
-        // POST: Articles/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost("/Register/")]
+        [HttpPost("Register/")]
 
         public IActionResult RegisterContact([Bind("Username,Password,Dispaly")] User user)
         {   
             if(!_service.checkValidation(user.UserName, user.Password))
             {
-                    return BadRequest();
+                    return BadRequest("userName and/or password incorrect!");
             } else
             {
                 HttpContext.Session.SetString("userName", user.UserName);
@@ -53,13 +50,13 @@ namespace WebAPI.Controllers
                     return NoContent();
             }
         }
-        [HttpPost("/Login/")]
+        [HttpPost("Login/")]
 
         public IActionResult LoginContact([Bind("Username,Password")] User user)
         {
             if (!_service.CheckUser(user.UserName, user.Password))
             {
-                return BadRequest();
+                return BadRequest("userName and/or password incorrect!");
             }
             else
             {

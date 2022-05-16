@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WebAPI;
 
@@ -21,7 +22,7 @@ namespace Domain
          ErrorMessage = "you have to have at least 1 letter and 1 number!.")]
 
         public string Password { get; set; }
-
+        [JsonIgnore]
         public List<Contact>? Conversations { get; set; }
 
 

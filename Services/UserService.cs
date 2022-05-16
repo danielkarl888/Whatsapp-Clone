@@ -11,8 +11,8 @@ namespace Services
 {
     public class UserService : IUserService
     {
-        private static List<User> users = new List<User> {  new User {UserName="david", Password="david1", Conversations=null, DisplayName="davi" },
-                                                            new User {UserName="raz", Password="raz1", Conversations= null, DisplayName="razi" } };
+        private static List<User> users = new List<User> {  new User {UserName="david", Password="david1", Conversations=ContactService.contacts["david"], DisplayName="davi" },
+                                                            new User {UserName="raz", Password="raz1", Conversations= ContactService.contacts["raz"], DisplayName="razi" } };
 
         public void AddUser(string username, string pass, string display)
         {
