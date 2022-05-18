@@ -64,6 +64,19 @@ namespace WebAPI.Controllers
                 return NoContent();
             }
         }
+        [HttpPost("UserExistCheck/{username}")]
+
+        public IActionResult UserExist(string username)
+        {
+            if (!_service.IsUserExist(username))
+            {
+                return BadRequest("userName is not exist!");
+            }
+            else
+            {
+                return NoContent();
+            }
+        }
 
     }
 

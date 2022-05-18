@@ -28,6 +28,14 @@ namespace Services
             }
             return false;
         }
+        public bool IsUserExist(string username)
+        {
+            if (users.Find(x => x.UserName == username) != null)
+            {
+                return true;
+            }
+            return false;
+        }
 
         public List<User> GetAllUsers()
         {

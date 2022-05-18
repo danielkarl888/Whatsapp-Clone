@@ -17,6 +17,7 @@ namespace Services
         public User GetUser(string username);
         public bool checkValidation(string username, string password);
 
+        public bool IsUserExist(string username);
 
 
     }
