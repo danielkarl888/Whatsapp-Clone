@@ -212,10 +212,10 @@ namespace WebAPI.Controllers
         }
         
         [HttpPost("/api/invitations/")]
-        public IActionResult Invite(string from, string to, string server)
+        public IActionResult Invite([Bind("from,to,server")] InvitationDetails details)
         {
-            _service.Create(from, from, server, to);
-            return Created(string.Format("/api/invitations/{0}", from), from);
+            _service.Create(details.from, details.from, details.server, details.to);
+            return Created(string.Format("/api/invitations/{0}", details.from), details.from);
         }
         [HttpPost("/api/transfer/")]
         public IActionResult Transfer([Bind("from,to,content")] TransferDetails t)
