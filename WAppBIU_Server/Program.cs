@@ -3,11 +3,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Services;
 using WAppBIU_Server.Data;
 var builder = WebApplication.CreateBuilder(args);
-
+/*
 builder.Services.AddDbContext<WAppBIU_ServerContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("WAppBIU_ServerContext") ?? throw new InvalidOperationException("Connection string 'WAppBIU_ServerContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("WAppBIU_ServerContext") ?? throw new InvalidOperationException("Connection string 'WAppBIU_ServerContext' not found.")));*/
 // Add services to the container.
+
 builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<IRankService, RankService>();
 
 var app = builder.Build();
 
@@ -24,6 +26,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Users}/{action=Register}/{id?}");
+    pattern: "{controller=Ranks}/{action=index}/{id?}");
 
 app.Run();

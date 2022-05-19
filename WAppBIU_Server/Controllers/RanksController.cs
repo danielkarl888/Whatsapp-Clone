@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Services;
 using WAppBIU_Server.Data;
 using WAppBIU_Server.Models;
 
@@ -12,45 +13,40 @@ namespace WAppBIU_Server.Controllers
 {
     public class RanksController : Controller
     {
-        private readonly WAppBIU_ServerContext _context;
+        private readonly IRankService _service;
 
-        public RanksController(WAppBIU_ServerContext context)
+        public RanksController(IRankService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: Ranks
-        public async Task<IActionResult> Index()
+        public  IActionResult Index()
         {
-            return View(await _context.Rank.ToListAsync());
+            return View(_service.GetAllRanks());
         }
         [HttpPost]
-        public async Task<IActionResult> Index(string query)
+        public IActionResult Index(string query)
         {
-            var q = from  rank in _context.Rank
-                    where rank.Name.Contains(query) ||
-                          rank.Text.Contains(query)
-                    select rank;
-            return View(await q.ToListAsync());
+            return View(_service.QuerySearch(query));
         }
-        public async Task<IActionResult> Index2(string query)
+        public IActionResult Index2(string query)
         {
-            var q = from rank in _context.Rank
+            /*
+            var q = from rank in _service.Rank
                     where rank.Name.Contains(query) ||
                           rank.Text.Contains(query)
-                    select rank;
-            return PartialView(await q.ToListAsync());
+                    select rank;*/
+            return PartialView(_service.QuerySearch(query));
         }
         // GET: Ranks/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
-            var rank = await _context.Rank
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var rank = _service.GetRankById(id);
             if (rank == null)
             {
                 return NotFound();
@@ -70,27 +66,27 @@ namespace WAppBIU_Server.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Number,Name,Text")] Rank rank)
+        public IActionResult Create([Bind("Id,Number,Name,Text")] Rank rank)
         {
             if (ModelState.IsValid)
             {
                 rank.Time=DateTime.Now;
-                _context.Add(rank);
-                await _context.SaveChangesAsync();
+                _service.AddRank(rank);
+                //await _service.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(rank);
         }
 
         // GET: Ranks/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var rank = await _context.Rank.FindAsync(id);
+            var rank = _service.GetRankById(id);
             if (rank == null)
             {
                 return NotFound();
@@ -103,7 +99,7 @@ namespace WAppBIU_Server.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Number,Name,Text")] Rank rank)
+        public IActionResult Edit(int id, [Bind("Id,Number,Name,Text")] Rank rank)
         {
             if (id != rank.Id)
             {
@@ -112,38 +108,27 @@ namespace WAppBIU_Server.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    rank.Time = DateTime.Now;
-                    _context.Update(rank);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RankExists(rank.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                var r = _service.GetRankById(id);
+                r.Number = rank.Number;
+                r.Name = rank.Name;
+                r.Text = rank.Text;
+                rank.Time = DateTime.Now;
+                    //await _service.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
             return View(rank);
         }
 
         // GET: Ranks/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var rank = await _context.Rank
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var rank = _service.GetRankById(id);
             if (rank == null)
             {
                 return NotFound();
@@ -155,17 +140,16 @@ namespace WAppBIU_Server.Controllers
         // POST: Ranks/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var rank = await _context.Rank.FindAsync(id);
-            _context.Rank.Remove(rank);
-            await _context.SaveChangesAsync();
+            var rank = _service.GetRankById(id);
+            _service.DeleteRank(rank);
             return RedirectToAction(nameof(Index));
         }
-
+        /*
         private bool RankExists(int id)
         {
-            return _context.Rank.Any(e => e.Id == id);
-        }
+            return _service.Rank.Any(e => e.Id == id);
+        }*/
     }
 }
