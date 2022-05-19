@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Domain;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using System.Net.Http;
@@ -217,20 +218,21 @@ namespace WebAPI.Controllers
             return Created(string.Format("/api/invitations/{0}", from), from);
         }
         [HttpPost("/api/transfer/")]
-        public IActionResult Transfer(string from, string to, string content)
+        public IActionResult Transfer([Bind("from,to,content")] TransferDetails t)
         {
-            if (!_service.CheckContactByID(from, to))
+            if (!_service.CheckContactByID(t.to, t.from))
             {
                 return NotFound();
             }
             Message message = new Message();
-            message.Id = _service.GetNextIdMessage(from, to);
+            message.Id = _service.GetNextIdMessage(t.to, t.from);
             message.Created = DateTime.Now;
             message.Sent = false;
-            _service.GetMessages(from, to).Add(message);
+            message.Content = t.content;
+            _service.GetMessages(t.to, t.from).Add(message);
             // change the info of the conatct
-            _service.Get(from, to).Last = message.Content;
-            _service.Get(from, to).LastDate = DateTime.Now;
+            _service.Get(t.to, t.from).Last = message.Content;
+            _service.Get(t.to, t.from).LastDate = DateTime.Now;
             
             return Created(string.Format("/api/transfer/{0}", message.Id), message);
 
