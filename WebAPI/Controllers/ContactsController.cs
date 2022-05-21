@@ -220,19 +220,19 @@ namespace WebAPI.Controllers
         [HttpPost("/api/transfer/")]
         public IActionResult Transfer([Bind("from,to,content")] TransferDetails t)
         {
-            if (!_service.CheckContactByID(t.to, t.from))
+            if (!_service.CheckContactByID(t.from, t.to))
             {
                 return NotFound();
             }
             Message message = new Message();
-            message.Id = _service.GetNextIdMessage(t.to, t.from);
+            message.Id = _service.GetNextIdMessage(t.from, t.to);
             message.Created = DateTime.Now;
             message.Sent = false;
             message.Content = t.content;
-            _service.GetMessages(t.to, t.from).Add(message);
+            _service.GetMessages(t.from, t.to).Add(message);
             // change the info of the conatct
-            _service.Get(t.to, t.from).Last = message.Content;
-            _service.Get(t.to, t.from).LastDate = DateTime.Now;
+            _service.Get(t.from, t.to).Last = message.Content;
+            _service.Get(t.from, t.to).LastDate = DateTime.Now;
             
             return Created(string.Format("/api/transfer/{0}", message.Id), message);
 
