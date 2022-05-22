@@ -214,6 +214,10 @@ namespace WebAPI.Controllers
         [HttpPost("/api/invitations/")]
         public IActionResult Invite([Bind("from,to,server")] InvitationDetails details)
         {
+            if (!ContactService.contacts.ContainsKey(details.to) || details.from == details.to)
+            {
+                return NotFound();
+            }
             _service.Create(details.from, details.from, details.server, details.to);
             return Created(string.Format("/api/invitations/{0}", details.from), details.from);
         }
