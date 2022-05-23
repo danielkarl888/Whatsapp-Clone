@@ -9,8 +9,7 @@ namespace Services
 {
     public class RankService : IRankService
     {
-        public static List<Rank> ranks = new List<Rank> { new Rank { Id = 1 , Name = "daniel", Number = 3, Text ="good!", Time=DateTime.Now},
-                                                          new Rank { Id = 1 , Name = "daniel", Number = 3, Text ="good!", Time=DateTime.UtcNow}};
+        public static List<Rank> ranks = new List<Rank> { new Rank { Id = 1 , Name = "daniel", Number = 3, Text ="good!", Time=DateTime.Now}};
 
 
 
@@ -27,6 +26,10 @@ namespace Services
 
         public List<Rank> QuerySearch(string query)
         {
+            if (query == null)
+            {
+                return ranks;
+            }
             return ranks.FindAll(x=>x.Name.Contains(query) || x.Text.Contains(query));
         }
 

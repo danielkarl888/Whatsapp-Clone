@@ -4,10 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1 class="text-center">Ranks Table</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-success align-items-center">Add your Rank to our App!</a>
 </p>
 @{
     float sum = 0;
@@ -20,7 +20,7 @@
     sum = (float)System.Math.Round(sum, 2);
 }
 
-<div> the avarage is @sum </div>
+<div class="fs-2 text-center"> The averaged rank for our app is @sum </div>
 <form asp-action="Index" autocomplete="off">
     <input name="query" id="search" />
     <input type="submit" value="Search" />
