@@ -9,7 +9,7 @@ namespace WebAPI.Hubs
         public async Task Changed(string content, string timeParam, string username)
         {
             // it invokes the func ChangeRecieved in the clients side
-            await Clients.All.SendAsync("ChangeRecevied", content, timeParam);
+            await Clients.All.SendAsync("ChangeRecevied", content, timeParam, username);
         }
     }
 }
