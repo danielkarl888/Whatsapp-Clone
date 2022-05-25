@@ -14,6 +14,10 @@ On this link, the running instructions are the same as the readme file in this l
 
 # SignalR
 To use the signalr, please install **On the client folder** with the command "npm i --save @microsoft/signalr"
+This feature  only works for LIVE messages.
+When adding a contact with other user , please relogin for both of them in order to make the chat updated.
+(this is because the requirement is only for messages) 
+
 
 # Pre-Registered Users
 in order to make your work easier, we put the users david and raz on the server.
