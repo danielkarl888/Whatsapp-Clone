@@ -240,6 +240,10 @@ namespace WebAPI.Controllers
             {
                 return NotFound();
             }
+            if (_service.CheckContactByID(details.from, details.to))
+            {
+                return NotFound();
+            }
             _service.Create(details.from, details.from, details.server, details.to);
             return Created(string.Format("/api/invitations/{0}", details.from), details.from);
         }
