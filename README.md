@@ -5,6 +5,7 @@ This server was desgined by Daniel Meir Karl and Dvir Landau
 
 # Turn on the server
 To turn on our server, please run multiple projects -  WAppBIU_Server and WebAPI.
+This will enable the server side and the ranking page.
 
 # Using the client side with the server
 In addition, to check the integration with the client (REACT) please go to : https://github.com/danielkarl888/WAppBIU/tree/serverBranchKarl
