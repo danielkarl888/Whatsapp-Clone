@@ -10,7 +10,7 @@ This will enable the server side and the ranking page.
 # Using the client side with the server
 In addition, to check the integration with the client (REACT) please go to : https://github.com/danielkarl888/WAppBIU/tree/serverBranchKarl
 On this link, the running instructions are the same as the readme file in this link.
-Please clone the brance named "serverBranchKarl". this branch is adapted to the server.
+**Please clone the brance named "serverBranchKarl".** this branch is adapted to the server.
 
 # SignalR
 To use the signalr, please install **On the client folder** with the command "npm i --save @microsoft/signalr"
