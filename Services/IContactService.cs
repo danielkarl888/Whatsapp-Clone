@@ -29,6 +29,7 @@ namespace Services
         public Message GetMessageById(string idContact, int idMessage, string username);
 
 
+        public Message GetLastMessage(string id, string username);
 
 
 

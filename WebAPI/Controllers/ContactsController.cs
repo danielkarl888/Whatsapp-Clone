@@ -1,8 +1,10 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Services;
 using System.Net.Http;
+using WebAPI.Hubs;
 
 namespace WebAPI.Controllers
 {
@@ -13,9 +15,11 @@ namespace WebAPI.Controllers
     public class ContactsController : Controller
     {
         private readonly IContactService _service;
-        public ContactsController(IContactService service)
+        private readonly IHubContext<MyHub> _hub;
+        public ContactsController(IContactService service, IHubContext<MyHub> hub)
         {
             _service = service;
+            _hub = hub;
         }
 
         // Get all contacts of the current user
@@ -65,6 +69,24 @@ namespace WebAPI.Controllers
             if (_service.CheckContactByID(id, user))
             {
                 return Ok(_service.Get(id, user).Messages);
+            }
+            else
+                return NotFound();
+        }
+        // Get the last message from a certain contact (according to the id contact)
+
+        [HttpGet("{id}/messages/lastMessage")]
+        public IActionResult LastMessage(string id, string user)
+        {
+
+            if (_service.CheckContactByID(id, user))
+            {
+                var mess = _service.GetLastMessage(id, user);
+                if (mess != null)
+                {
+                    return Ok(_service.GetLastMessage(id, user));
+                }
+                return NotFound("no messages yet!");
             }
             else
                 return NotFound();
@@ -237,7 +259,8 @@ namespace WebAPI.Controllers
             // change the info of the conatct
             _service.Get(t.from, t.to).Last = message.Content;
             _service.Get(t.from, t.to).LastDate = DateTime.Now;
-            
+            // _hub.Clients.All.SendAsync("ChangeRecevied", t.content, t.from, t.to);
+
             return Created(string.Format("/api/transfer/{0}", message.Id), message);
 
         }

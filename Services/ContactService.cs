@@ -69,6 +69,14 @@ namespace Services
         {
             return contacts[username].Find(x => x.Id == id);
         }
+        public Message GetLastMessage(string id, string username)
+        {
+             if(GetMessages(id, username).Count() == 0)
+            {
+                return null;
+            }
+            return GetMessages(id, username).Last();
+        }
         public List<Message> GetMessages(string id, string username)
         {
             return contacts[username].Find(x => x.Id == id).Messages;
