@@ -30,7 +30,10 @@ All Server's data is located on this address.
 
 # Client adderess
 Please use the address http://localhost:3000 for the react web app.
-
+# Test of WebAPI
+To check our API with Swagger, please register with our **/api/Users/Register** and afterwards with  **/api/Users/Login**.
+to use all **/api/contacts/.../** please enter at the user parameter the logged-in user in order to check his data with the api.
+Ofcourse, the client side uses all this APIs.
 
 
 
