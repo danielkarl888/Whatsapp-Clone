@@ -20,7 +20,7 @@ namespace Services
 
                 } },
 
-                new Contact{ Id="bob", Name="Bobby", Last="biibii", Server="localhost:3000", LastDate=DateTime.Now,
+                new Contact{ Id="bob", Name="Bobby", Last="biibii", Server="localhost:3002", LastDate=DateTime.Now,
 
                 Messages=new List<Message>{ new Message {Id=121, Content="hii", Created=DateTime.UtcNow, Sent=true },
                                             new Message {Id=123, Content="biibii", Created=DateTime.Now, Sent=false },
@@ -69,6 +69,7 @@ namespace Services
         {
             return contacts[username].Find(x => x.Id == id);
         }
+     
         public Message GetLastMessage(string id, string username)
         {
              if(GetMessages(id, username).Count() == 0)
@@ -103,6 +104,15 @@ namespace Services
         public bool CheckContactByID(string id, string username)
         {
             if (contacts[username].Find(x => x.Id == id) != null)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+        public bool CheckUserByID(string username)
+        {
+            if (contacts.ContainsKey(username))
             {
                 return true;
             }

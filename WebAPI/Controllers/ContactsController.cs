@@ -27,13 +27,12 @@ namespace WebAPI.Controllers
         [HttpGet]
         public IActionResult Index(string user)
         {
-            //string user = HttpContext.Session.GetString("userName");
-            /*
-            if (HttpContext.Session.GetString("userName") == null)
+            
+            if (!_service.CheckUserByID(user))
             {
-                return BadRequest("User MUST Login!");
+                return BadRequest("This User is not Registered!");
             }
-            */
+            
             return Ok(_service.GetAllContacts(user));
         }
 
@@ -42,13 +41,10 @@ namespace WebAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult Details(string id, string user)
         {
-            //string user = HttpContext.Session.GetString("userName");
-            /*
-            if (user == null)
+            if (!_service.CheckUserByID(user))
             {
-                return BadRequest("User MUST Login!");
+                return BadRequest("This User is not Registered!");
             }
-            */
             if (_service.CheckContactByID(id, user)){
                 return Ok(_service.Get(id, user));
             } else
@@ -59,13 +55,10 @@ namespace WebAPI.Controllers
         [HttpGet("{id}/messages")]
         public IActionResult DetailsMessages(string id, string user)
         {
-            //string user = HttpContext.Session.GetString("userName");
-            /*
-            if (user == null)
+            if (!_service.CheckUserByID(user))
             {
-                return BadRequest("User MUST Login!");
+                return BadRequest("This User is not Registered!");
             }
-            */
             if (_service.CheckContactByID(id, user))
             {
                 return Ok(_service.Get(id, user).Messages);
@@ -78,7 +71,10 @@ namespace WebAPI.Controllers
         [HttpGet("{id}/messages/lastMessage")]
         public IActionResult LastMessage(string id, string user)
         {
-
+            if (!_service.CheckUserByID(user))
+            {
+                return BadRequest("This User is not Registered!");
+            }
             if (_service.CheckContactByID(id, user))
             {
                 var mess = _service.GetLastMessage(id, user);
@@ -98,12 +94,10 @@ namespace WebAPI.Controllers
 
         public IActionResult CreateContact([Bind("Id,Name,Server")] Contact contact, string user)
         {
-            /*
-            if (HttpContext.Session.GetString("userName") == null)
+            if (!_service.CheckUserByID(user))
             {
-                return BadRequest("User MUST Login!");
+                return BadRequest("This User is not Registered!");
             }
-            */
             _service.Create(contact.Id, contact.Name, contact.Server, user);
             return Created(string.Format("/api/Contacts/{0}", contact.Id), contact);
         }
@@ -112,12 +106,10 @@ namespace WebAPI.Controllers
         [HttpPost("{id}/messages")]
         public IActionResult CreateMessage([Bind("Content")] Message message, string id, string user)
         {
-            //string user = HttpContext.Session.GetString("userName");
-            /*
-            if (user == null)
+            if (!_service.CheckUserByID(user))
             {
-                return BadRequest("User MUST Login!");
-            }*/
+                return BadRequest("This User is not Registered!");
+            }
             // check if the id contact exist
             if (!_service.CheckContactByID(id, user))
             {
@@ -139,12 +131,10 @@ namespace WebAPI.Controllers
         //change a cerain contact info (only name and server)
         public IActionResult Put([Bind("Name,Server")] Contact contact, string id, string user)
         {
-            /*
-            string user = HttpContext.Session.GetString("userName");
-            if (user == null)
+            if (!_service.CheckUserByID(user))
             {
-                return BadRequest("User MUST Login!");
-            }*/
+                return BadRequest("This User is not Registered!");
+            }
             if (_service.CheckContactByID(id, user))
             {
                 _service.Get(id, user).Name = contact.Name;
@@ -158,13 +148,10 @@ namespace WebAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteContact(string id, string user)
         {
-            /*
-            string user = HttpContext.Session.GetString("userName");
-            if (user == null)
+            if (!_service.CheckUserByID(user))
             {
-                return BadRequest("User MUST Login!");
+                return BadRequest("This User is not Registered!");
             }
-            */
             if (_service.CheckContactByID(id, user))
             {
                 _service.Delete(id, user);
@@ -176,12 +163,11 @@ namespace WebAPI.Controllers
         // get a certain message(id2) from certain contact(id) 
         [HttpGet("{id}/messages/{id2}")]
         public IActionResult getMessage(string id, int id2, string user)
-        {/*
-            string user = HttpContext.Session.GetString("userName");
-            if (user == null)
+        {
+            if (!_service.CheckUserByID(user))
             {
-                return BadRequest("User MUST Login!");
-            }*/
+                return BadRequest("This User is not Registered!");
+            }
             if (_service.CheckContactByID(id, user) && _service.CheckMessageByID(id, id2, user))
             {
                 return Ok(_service.GetMessageById(id, id2, user));
@@ -195,16 +181,19 @@ namespace WebAPI.Controllers
 
         [HttpPut("{id}/messages/{id2}")]
         public IActionResult putMessage([Bind("content")] Message message,string id, int id2, string user)
-        {/*
-            string user = HttpContext.Session.GetString("userName");
-            if (user == null)
+        {
+            if (!_service.CheckUserByID(user))
             {
-                return BadRequest("User MUST Login!");
-            }*/
+                return BadRequest("This User is not Registered!");
+            }
             if (_service.CheckContactByID(id, user) && _service.CheckMessageByID(id, id2, user))
             {
                 _service.GetMessageById(id, id2, user).Content=message.Content;
                 _service.GetMessageById(id, id2, user).Created = DateTime.Now;
+                //update the contact info about the last message
+                _service.Get(id, user).Last = _service.GetLastMessage(id, user).Content;
+                _service.Get(id, user).LastDate = _service.GetLastMessage(id, user).Created;
+
                 return NoContent();
             }
             else
@@ -217,14 +206,17 @@ namespace WebAPI.Controllers
         [HttpDelete("{id}/messages/{id2}")]
         public IActionResult deleteMessage(string id, int id2, string user)
         {
-            //string user = HttpContext.Session.GetString("userName");
-            /*if (user == null)
+            if (!_service.CheckUserByID(user))
             {
-                return BadRequest("User MUST Login!");
-            }*/
+                return BadRequest("This User is not Registered!");
+            }
             if (_service.CheckContactByID(id, user) && _service.CheckMessageByID(id, id2, user))
             {
                 _service.GetMessages(id, user).Remove(_service.GetMessageById(id, id2, user));
+                //update the contact info about the last message
+                _service.Get(id, user).Last = _service.GetLastMessage(id, user).Content;
+                _service.Get(id, user).LastDate = _service.GetLastMessage(id, user).Created;
+
                 return NoContent();
             }
             else
