@@ -117,12 +117,12 @@ namespace WebAPI.Controllers
             }
             
             message.Id = _service.GetNextIdMessage(id, user);
-            message.Created = DateTime.Now;
+            message.Created = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff");
             message.Sent = true;
             _service.GetMessages(id, user).Add(message);
             // change the info of the conatct
             _service.Get(id, user).Last = message.Content;
-            _service.Get(id, user).LastDate = DateTime.Now;
+            _service.Get(id, user).LastDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff");
 
             return Created(string.Format("/api/Contacts/{0}/messages", message.Id), message);
         }
@@ -189,7 +189,7 @@ namespace WebAPI.Controllers
             if (_service.CheckContactByID(id, user) && _service.CheckMessageByID(id, id2, user))
             {
                 _service.GetMessageById(id, id2, user).Content=message.Content;
-                _service.GetMessageById(id, id2, user).Created = DateTime.Now;
+                _service.GetMessageById(id, id2, user).Created = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff");
                 //update the contact info about the last message
                 _service.Get(id, user).Last = _service.GetLastMessage(id, user).Content;
                 _service.Get(id, user).LastDate = _service.GetLastMessage(id, user).Created;
@@ -248,13 +248,13 @@ namespace WebAPI.Controllers
             }
             Message message = new Message();
             message.Id = _service.GetNextIdMessage(t.from, t.to);
-            message.Created = DateTime.Now;
+            message.Created = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff");
             message.Sent = false;
             message.Content = t.content;
             _service.GetMessages(t.from, t.to).Add(message);
             // change the info of the conatct
             _service.Get(t.from, t.to).Last = message.Content;
-            _service.Get(t.from, t.to).LastDate = DateTime.Now;
+            _service.Get(t.from, t.to).LastDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff");
             // _hub.Clients.All.SendAsync("ChangeRecevied", t.content, t.from, t.to);
 
             return Created(string.Format("/api/transfer/{0}", message.Id), message);
