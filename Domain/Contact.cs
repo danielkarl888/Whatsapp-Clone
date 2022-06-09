@@ -13,7 +13,7 @@ namespace WebAPI
 
         public string? Last { get; set; }
 
-        public string? LastDate { get; set; }
+        public DateTime? LastDate { get; set; }
 
         [JsonIgnore]
         public List<Message>? Messages { get; set; }
