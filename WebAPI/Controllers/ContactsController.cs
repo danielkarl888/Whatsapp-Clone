@@ -23,16 +23,16 @@ namespace WebAPI.Controllers
         }
 
         // Get all contacts of the current user
-        
+
         [HttpGet]
         public IActionResult Index(string user)
         {
-            
+
             if (!_service.CheckUserByID(user))
             {
                 return BadRequest("This User is not Registered!");
             }
-            
+
             return Ok(_service.GetAllContacts(user));
         }
 
@@ -45,10 +45,12 @@ namespace WebAPI.Controllers
             {
                 return BadRequest("This User is not Registered!");
             }
-            if (_service.CheckContactByID(id, user)){
+            if (_service.CheckContactByID(id, user))
+            {
                 return Ok(_service.Get(id, user));
-            } else
-               return NotFound();
+            }
+            else
+                return NotFound();
         }
 
         // Get all messages from a certain contact (according to the id contact)
@@ -115,14 +117,14 @@ namespace WebAPI.Controllers
             {
                 return NotFound();
             }
-            
+
             message.Id = _service.GetNextIdMessage(id, user);
-            message.Created = DateTime.Now;
+            message.Created = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff");
             message.Sent = true;
             _service.GetMessages(id, user).Add(message);
             // change the info of the conatct
             _service.Get(id, user).Last = message.Content;
-            _service.Get(id, user).LastDate = DateTime.Now;
+            _service.Get(id, user).LastDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff");
 
             return Created(string.Format("/api/Contacts/{0}/messages", message.Id), message);
         }
@@ -172,7 +174,8 @@ namespace WebAPI.Controllers
             {
                 return Ok(_service.GetMessageById(id, id2, user));
 
-            } else
+            }
+            else
             {
                 return NotFound();
             }
@@ -180,7 +183,7 @@ namespace WebAPI.Controllers
         // change a certain message(id2) from certain contact(id) 
 
         [HttpPut("{id}/messages/{id2}")]
-        public IActionResult putMessage([Bind("content")] Message message,string id, int id2, string user)
+        public IActionResult putMessage([Bind("content")] Message message, string id, int id2, string user)
         {
             if (!_service.CheckUserByID(user))
             {
@@ -188,8 +191,8 @@ namespace WebAPI.Controllers
             }
             if (_service.CheckContactByID(id, user) && _service.CheckMessageByID(id, id2, user))
             {
-                _service.GetMessageById(id, id2, user).Content=message.Content;
-                _service.GetMessageById(id, id2, user).Created = DateTime.Now;
+                _service.GetMessageById(id, id2, user).Content = message.Content;
+                _service.GetMessageById(id, id2, user).Created = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff");
                 //update the contact info about the last message
                 _service.Get(id, user).Last = _service.GetLastMessage(id, user).Content;
                 _service.Get(id, user).LastDate = _service.GetLastMessage(id, user).Created;
@@ -224,7 +227,7 @@ namespace WebAPI.Controllers
                 return NotFound();
             }
         }
-        
+
         [HttpPost("/api/invitations/")]
         public IActionResult Invite([Bind("from,to,server")] InvitationDetails details)
         {
@@ -248,13 +251,13 @@ namespace WebAPI.Controllers
             }
             Message message = new Message();
             message.Id = _service.GetNextIdMessage(t.from, t.to);
-            message.Created = DateTime.Now;
+            message.Created = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff");
             message.Sent = false;
             message.Content = t.content;
             _service.GetMessages(t.from, t.to).Add(message);
             // change the info of the conatct
             _service.Get(t.from, t.to).Last = message.Content;
-            _service.Get(t.from, t.to).LastDate = DateTime.Now;
+            _service.Get(t.from, t.to).LastDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff");
             // _hub.Clients.All.SendAsync("ChangeRecevied", t.content, t.from, t.to);
 
             return Created(string.Format("/api/transfer/{0}", message.Id), message);
@@ -262,6 +265,6 @@ namespace WebAPI.Controllers
         }
     }
 
-    }
+}
 
 
