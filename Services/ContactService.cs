@@ -18,38 +18,12 @@ namespace Services
                 Messages=new List<Message>{ new Message {Id=188, Content="hii raz", Created=DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"), Sent=true },
                                             new Message {Id=189, Content="bii raz", Created=DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"), Sent=false },
 
-                } },
-
-                new Contact{ Id="bob", Name="Bobby", Last="biibii", Server="localhost:3002", LastDate=DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"),
-
-                Messages=new List<Message>{ new Message {Id=121, Content="hii", Created=DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"), Sent=true },
-                                            new Message {Id=123, Content="biibii", Created=DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"), Sent=false },
-
-                } },
-
-                /*new Contact{ Id="raz", Name="razi", Last="with raz", Server="localhost:5030", LastDate=DateTime.Now,
-
-                Messages=new List<Message>{ new Message {Id=188, Content="hii raz", Created=DateTime.UtcNow, Sent=true },
-                                            new Message {Id=189, Content="bii raz", Created=DateTime.Now, Sent=false },
-
-                } },*/
-                new Contact{ Id="alice", Name="Alicia", Last="david", Server="localhost:2500", LastDate=DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"),
-                             Messages=new List<Message>{ new Message {Id=141, Content="razzz", Created=DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"), Sent=true },
-                                                         new Message {Id=143, Content="david", Created=DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"), Sent=false } }    }
+                } }                
         }},
         {"raz", new List<Contact>{
                                             new Contact{    Id="david", Name="davi", Last="hii raz", Server="localhost:5030", LastDate=DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"),
                                 Messages=new List<Message>{ new Message {Id=188, Content="hii raz", Created=DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"), Sent=false },
                                                             new Message {Id=189, Content="bii raz", Created=DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"), Sent=true },} },
-                new Contact{    Id="bob_raz", Name="Bobby", Last="biibii", Server="localhost:3001", LastDate=DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"),
-                                Messages=new List<Message>{ new Message {Id=121, Content="hii", Created=DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"), Sent=true },
-                                                            new Message {Id=123, Content="biibii", Created=DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"), Sent=false },} },
-                                /*new Contact{    Id="david", Name="davi", Last="hii raz", Server="localhost:5030", LastDate=DateTime.Now,
-                                Messages=new List<Message>{ new Message {Id=188, Content="hii raz", Created=DateTime.UtcNow, Sent=false },
-                                                            new Message {Id=189, Content="bii raz", Created=DateTime.Now, Sent=true },} },*/
-                new Contact{    Id="alice_raz", Name="Alicia_raz", Last="david_raz", Server="localhost:2502", LastDate=DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"),
-                                Messages=new List<Message>{ new Message {Id=141, Content="razzz_raz", Created=DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"), Sent=true },
-                                                         new Message {Id=143, Content="david_raz", Created=DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"), Sent=false } } }
         }}
         };
         public void Delete(string id, string username)

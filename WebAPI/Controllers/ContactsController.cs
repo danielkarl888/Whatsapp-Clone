@@ -240,7 +240,7 @@ namespace WebAPI.Controllers
                 return NotFound();
             }
             _service.Create(details.from, details.from, details.server, details.to);
-            return Created(string.Format("/api/invitations/{0}", details.from), details.from);
+            return Created(string.Format("/api/invitations/{0}", details.from), details);
         }
         [HttpPost("/api/transfer/")]
         public IActionResult Transfer([Bind("from,to,content")] TransferDetails t)
