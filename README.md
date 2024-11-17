@@ -2,6 +2,7 @@
 
 Welcome to the **WhatsApp Clone Server**!  
 This server was designed and developed by **Daniel Meir Karl** and **Dvir Landau**. 👨‍💻👨‍💻
+
 ![image](https://github.com/user-attachments/assets/bd4cf0c9-fa89-420b-a4fb-0e462779a9d8)
 
 ---
