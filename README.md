@@ -9,7 +9,8 @@ This server was designed and developed by **Daniel Meir Karl** and **Dvir Landau
 
 ## Project Purpose 🎯
 
-The **WhatsApp Clone** project aims to replicate the core functionality of the popular messaging app, WhatsApp. The purpose of this project is to provide a platform for real-time messaging, where users can interact with each other, manage contacts, and send messages in real time. This clone focuses on demonstrating the integration of backend services, real-time communication via **SignalR**, and server-client interaction in a modern web application. It is a learning project built with the goal of improving our understanding of API development, real-time features, and modern web technologies.
+The **WhatsApp Clone** project aims to replicate the core functionality of the popular messaging app, WhatsApp. The purpose of this project is to provide a platform for real-time messaging, where users can interact with each other, manage contacts, and send messages in real time. This clone focuses on demonstrating the integration of backend services, real-time communication via SignalR, and server-client interaction in a modern web application. It is a learning project built with the goal of improving our understanding of RESTful API development for users and contacts, real-time features, and modern web technologies.
+
 
 ---
 
